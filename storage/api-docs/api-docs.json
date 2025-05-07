@@ -1,0 +1,132 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API - Carteira Financeira",
+        "description": "Documentação da API de autenticação, cadastro e operações financeiras.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:80",
+            "description": "Servidor de desenvolvimento"
+        }
+    ],
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Cadastro"
+                ],
+                "summary": "Registra um novo usuário",
+                "operationId": "ed7703a18fb888779fc84a24730577f8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "cpf_cnpj",
+                                    "password",
+                                    "password_confirmation",
+                                    "street",
+                                    "number",
+                                    "neighborhood",
+                                    "city",
+                                    "state",
+                                    "zipcode"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "João da Silva"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "joao@email.com"
+                                    },
+                                    "cpf_cnpj": {
+                                        "type": "string",
+                                        "example": "00000000000"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Senha123!"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "Senha123!"
+                                    },
+                                    "street": {
+                                        "type": "string",
+                                        "example": "Rua A"
+                                    },
+                                    "number": {
+                                        "type": "string",
+                                        "example": "123"
+                                    },
+                                    "neighborhood": {
+                                        "type": "string",
+                                        "example": "Centro"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "São Paulo"
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "example": "SP"
+                                    },
+                                    "zipcode": {
+                                        "type": "string",
+                                        "example": "12345-678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário registrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "João da Silva"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "Bearer eyJ.."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "500": {
+                        "description": "Erro interno no servidor"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Cadastro",
+            "description": "Cadastro"
+        }
+    ]
+}
