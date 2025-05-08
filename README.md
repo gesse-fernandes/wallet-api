@@ -32,6 +32,7 @@ Desenvolvida com **Laravel**, **JWT Auth**, **Docker via Sail**, **Laravel Teles
 
 - Git
 - Docker & Docker Compose
+- Composer 
 
 ### Setup do Projeto
 
