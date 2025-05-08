@@ -12,7 +12,6 @@ Esta API simula uma carteira financeira, permitindo que usuários:
 
 Desenvolvida com **Laravel**, **JWT Auth**, **Docker via Sail**, **Laravel Telescope** e **Swagger**.
 
-
 ---
 
 ## 🧪 Tecnologias
@@ -43,7 +42,6 @@ cd wallet-api
 
 # Copie o .env de exemplo
 cp .env.example .env
-
 ```
 # Edite as variáveis no .env:
 ```bash
@@ -74,17 +72,13 @@ php artisan sail:install
 
 # Rode as migrations
 ./vendor/bin/sail artisan migrate
-
 ```
 
 ### 🔐 Autenticação
 # Após login, todas as requisições devem conter:
 
 ```bash
-
-
 Authorization: Bearer {token}
-
 ```
 
 ### 📑 Endpoints da API
@@ -105,67 +99,58 @@ POST /api/auth/register
   "state": "SP",
   "zipcode": "12345-678"
 }
-
 ```
 
 Retorno esperado:
 
 ```bash
-
 {
   "id": 1,
   "name": "João da Silva",
   "token": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzQ2NzMxNTQzLCJleHAiOjE3NDY3MzUxNDMsIm5iZiI6MTc0NjczMTU0MywianRpIjoiOVp2YmFrTTgxZ1RNZ09WRSIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.txaYxvIdg2-p-XRtEoSOSUk0otmWd1OkJssttMg72xk"
 }
-
 ```
 
 
 POST /api/auth/login
-
 ```bash
 {
   "email": "joao@email.com",
   "password": "Senha123!"
 }
-
 ```
-Retorno esperado:
-```bash
 
+Retorno esperado:
+
+```bash
 {
   "id": 1,
   "name": "João da Silva",
   "token": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzQ2NzMxNTQzLCJleHAiOjE3NDY3MzUxNDMsIm5iZiI6MTc0NjczMTU0MywianRpIjoiOVp2YmFrTTgxZ1RNZ09WRSIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.txaYxvIdg2-p-XRtEoSOSUk0otmWd1OkJssttMg72xk"
 }
-
 ```
 
 POST /api/auth/logout
+
 ```bash
 Authorization: Bearer {token}
-
 ```
 
 Retorno esperado:
 
 ```bash
-
 {
   "message": "Logout realizado com sucesso."
 }
-
 ```
 
 POST /api/transactions/transfer
 
 ```bash
-
 {
   "amount":1000,
   "payee_id":1,
 }
-
 ```
 Retorno esperado:
 
@@ -188,18 +173,15 @@ Retorno esperado:
     },
     "balance": "500.00"
 }
-
 ```
 
 POST /api/transactions/deposit
 
 ```bash
-
 {
   "amount":1000,
  
 }
-
 ```
 Retorno esperado:
 
@@ -222,7 +204,6 @@ Retorno esperado:
     },
     "balance": "1500.00"
 }
-
 ```
 
 POST /api/transactions/reverse/{id}
@@ -230,7 +211,6 @@ POST /api/transactions/reverse/{id}
 {
   "reason": "Forma de pagamento invalida"
 }
-
 ```
 Retorno esperado:
 
@@ -286,26 +266,41 @@ Retorno esperado:
 
 # Para rodar os testes:
 ```bash
-
 ./vendor/bin/sail test
-
-
 ```
 
 # O Laravel Telescope está disponível em:
 
 ```bash
-
 http://localhost/telescope
+```
 
+# 📘 Swagger UI (Documentação Interativa)
+# A API também conta com uma interface interativa via Swagger, gerada automaticamente com base nas annotations do projeto.
 
+ Acessar documentação:
+ ```bash
 
+http://localhost/api/documentation
+```
+
+Variáveis necessárias no .env
+
+ ```bash
+L5_SWAGGER_ENABLED=true
+L5_SWAGGER_CONST_HOST=http://localhost
+L5_SWAGGER_GENERATE_ALWAYS=true
+```
+
+Gerar a documentação manualmente:
+
+ ```bash
+./vendor/bin/sail artisan l5-swagger:generate
 ```
 
 # 🧰 Comandos úteis
 
 ```bash
-
 # Subir containers
 ./vendor/bin/sail up -d
 
@@ -317,25 +312,17 @@ http://localhost/telescope
 
 # Executar testes
 ./vendor/bin/sail test
-
 ```
 Permissões
 
 ```bash
-
 chmod -R 777 storage bootstrap/cache
-
-
 ```
 
 Caso ocorra Erros no Sail: 
 
 
 ```bash
-
 ./vendor/bin/sail down --rmi all -v
 ./vendor/bin/sail up -d
-
-
-
 ```
