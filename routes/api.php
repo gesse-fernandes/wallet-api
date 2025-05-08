@@ -6,5 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('api')->group(function () {
+
     Route::post('/auth/register', [AuthControllerApi::class, 'register']);
+
+
+    Route::post('/auth/login', [AuthControllerApi::class, 'login']);
+
+
+    Route::middleware('auth:api')->post('/auth/logout', [AuthControllerApi::class, 'logout']);
 });

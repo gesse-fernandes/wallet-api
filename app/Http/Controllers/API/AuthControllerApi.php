@@ -5,6 +5,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
@@ -80,6 +81,85 @@ class AuthControllerApi extends Controller
         } catch (\Throwable $e) {
             return response()->json([
                 "message" => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     tags={"Autenticação"},
+     *     summary="Realiza o login de um usuário",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", example="joao@email.com"),
+     *             @OA\Property(property="password", type="string", example="Senha123!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login bem-sucedido",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="João da Silva"),
+     *             @OA\Property(property="token", type="string", example="Bearer eyJ...")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Credenciais inválidas"
+     *     )
+     * )
+     */
+    public function login(LoginRequest $request)
+    {
+        try {
+            $response = $this->authService->login($request->validated());
+
+            return response()->json([
+                'id' => $response['user']->id,
+                'name' => $response['user']->name,
+                'token' => $response['token'],
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 401);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/logout",
+     *     tags={"Autenticação"},
+     *     summary="Faz logout do usuário autenticado",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logout realizado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Logout realizado com sucesso.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro ao realizar logout"
+     *     )
+     * )
+     */
+    public function logout()
+    {
+        try {
+            $this->authService->logout();
+
+            return response()->json([
+                'message' => 'Logout realizado com sucesso.',
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

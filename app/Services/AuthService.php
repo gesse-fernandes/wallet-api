@@ -7,6 +7,9 @@ use App\Repositories\Contracts\AddressRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+
 
 class AuthService
 {
@@ -43,6 +46,31 @@ class AuthService
 
 
             throw new \Exception("Não foi possível concluir o cadastro. Tente novamente.");
+        }
+    }
+
+    public function login(array $credentials)
+    {
+        $user = $this->userRepository->findByEmail($credentials['email']);
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            throw new \Exception('Credenciais inválidas.');
+        }
+
+        $token = JWTAuth::fromUser($user);
+
+        return [
+            'user' => $user,
+            'token' => 'Bearer ' . $token,
+        ];
+    }
+
+    public function logout()
+    {
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+        } catch (JWTException $e) {
+            throw new \Exception('Falha ao fazer logout.');
         }
     }
 }

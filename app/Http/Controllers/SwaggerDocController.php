@@ -14,6 +14,14 @@ namespace App\Http\Controllers;
  *     description="Servidor de desenvolvimento"
  * )
  *
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     description="Insira o token JWT no formato: Bearer {token}"
+ * )
+ *
  * @OA\Tag(
  *     name="Autenticação",
  *     description="Endpoints de registro e login"
@@ -23,6 +31,5 @@ namespace App\Http\Controllers;
  *     name="Transações",
  *     description="Operações de saldo e transferências"
  * )
- *
  */
 class SwaggerDocController extends Controller {}
