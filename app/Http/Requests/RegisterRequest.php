@@ -63,12 +63,4 @@ class RegisterRequest extends FormRequest
             'zipcode.formato_cep' => 'O formato do CEP é inválido.',
         ];
     }
-    /*
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'message' => 'Erro de validação.',
-            'errors' => $validator->errors(),
-        ], 422));
-    }*/
 }

@@ -8,24 +8,24 @@ use App\Repositories\Contracts\TransactionRepositoryInterface;
 
 class TransactionRepository implements TransactionRepositoryInterface
 {
-    public function create(array $data): Transaction
+    public function create($data)
     {
         return Transaction::create($data);
     }
 
-    public function findById(int $id): ?Transaction
+    public function findById($id)
     {
         return Transaction::find($id);
     }
 
-    public function findUserTransactions(int $userId): iterable
+    public function findUserTransactions($userId)
     {
         return Transaction::where('payer_id', $userId)
             ->orWhere('payee_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
     }
-    public function findByIdUser(int $id)
+    public function findByIdUser($id)
     {
         return User::find($id);
     }

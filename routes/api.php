@@ -17,7 +17,9 @@ Route::middleware('api')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::post('/auth/logout', [AuthControllerApi::class, 'logout']);
 
-        // Rota de transferência
+
         Route::post('/transactions/transfer', [TransactionControllerApi::class, 'transfer']);
+        Route::post('/transactions/deposit', [TransactionControllerApi::class, 'deposit']);
+        Route::post('/transactions/reverse/{id}', [TransactionControllerApi::class, 'reverse']);
     });
 });

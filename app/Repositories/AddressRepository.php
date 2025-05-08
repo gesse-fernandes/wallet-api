@@ -7,7 +7,7 @@ use App\Repositories\Contracts\AddressRepositoryInterface;
 
 class AddressRepository implements AddressRepositoryInterface
 {
-    public function create(array $data)
+    public function create($data)
     {
         return Address::create($data);
     }

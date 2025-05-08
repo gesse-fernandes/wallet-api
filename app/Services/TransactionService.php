@@ -49,4 +49,61 @@ class TransactionService
             ]);
         });
     }
+
+    public function deposit(array $data): Transaction
+    {
+        return DB::transaction(function () use ($data) {
+            $payee = Auth::user();
+
+
+            $this->transactionRepo->incrementBalance($payee, $data['amount']);
+
+            return $this->transactionRepo->create([
+                'payer_id' => null,
+                'payee_id' => $payee->id,
+                'type' => 'deposit',
+                'status' => 'completed',
+                'amount' => $data['amount'],
+                'metadata' => $data['metadata'] ?? [],
+            ]);
+        });
+    }
+
+    public function reverse($transactionId,  $reason = null)
+    {
+        return DB::transaction(function () use ($transactionId, $reason) {
+            $user = Auth::user();
+            $original = $this->transactionRepo->findById($transactionId);
+
+            if (!$original || $original->status !== 'completed') {
+                throw new \Exception('Transação não encontrada ou não pode ser revertida.', 400);
+            }
+
+            if ($original->payer_id !== $user->id && $original->payee_id !== $user->id) {
+                throw new \Exception('Você não tem permissão para reverter esta transação.', 403);
+            }
+
+            // Reverter valores
+            if ($original->type === 'transfer') {
+                $this->transactionRepo->decrementBalance($original->payee, $original->amount);
+                $this->transactionRepo->incrementBalance($original->payer, $original->amount);
+            } elseif ($original->type === 'deposit') {
+                $this->transactionRepo->decrementBalance($original->payee, $original->amount);
+            } else {
+                throw new \Exception('Tipo de transação inválido para reversão.', 422);
+            }
+
+
+            $original->status = 'reversed';
+            $original->reversed_transaction_id = $original->id;
+            $original->metadata = ['reason' => $reason ?? 'Reversão solicitada'];
+            $original->save();
+
+            return [
+                $original->type,
+                $user->balance,
+
+            ];
+        });
+    }
 }

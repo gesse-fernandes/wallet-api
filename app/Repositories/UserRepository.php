@@ -7,11 +7,11 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function create(array $data)
+    public function create($data)
     {
         return User::create($data);
     }
-    public function findByEmail(string $email)
+    public function findByEmail($email)
     {
         return User::where('email', $email)->first();
     }
