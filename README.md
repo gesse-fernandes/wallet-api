@@ -275,8 +275,8 @@ Retorno esperado:
 http://localhost/telescope
 ```
 
-# 📘 Swagger UI (Documentação Interativa)
-# A API também conta com uma interface interativa via Swagger, gerada automaticamente com base nas annotations do projeto.
+ 📘 Swagger UI (Documentação Interativa)
+ A API também conta com uma interface interativa via Swagger, gerada automaticamente com base nas annotations do projeto.
 
  Acessar documentação:
  ```bash
