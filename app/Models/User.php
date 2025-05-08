@@ -56,6 +56,18 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Address::class);
     }
 
+    public function sentTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'payer_id')->where('status', 'completed');
+    }
+
+    public function receivedTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'payee_id')->where('status', 'completed');
+    }
+
+
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

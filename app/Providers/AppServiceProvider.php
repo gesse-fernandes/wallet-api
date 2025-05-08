@@ -20,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Contracts\AddressRepositoryInterface::class,
             \App\Repositories\AddressRepository::class
         );
+        $this->app->bind(
+            \App\Repositories\Contracts\TransactionRepositoryInterface::class,
+            \App\Repositories\TransactionRepository::class
+        );
 
         if ($this->app->environment('local')) {
             $this->app->bind(\App\Http\Middleware\VerifyCsrfToken::class, fn() => new class extends \App\Http\Middleware\VerifyCsrfToken {

@@ -181,7 +181,12 @@
                     "401": {
                         "description": "Credenciais inválidas"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/auth/logout": {
@@ -218,6 +223,82 @@
                     }
                 ]
             }
+        },
+        "/api/transactions/transfer": {
+            "post": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Realiza uma transferência entre usuários",
+                "operationId": "5e29baa45ec55960af3d0d33b75e5b21",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "amount",
+                                    "payee_id"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100.5
+                                    },
+                                    "payee_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "metadata": {
+                                        "type": "object",
+                                        "example": {
+                                            "descricao": "pagamento de serviço"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transferência realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transferência realizada com sucesso"
+                                        },
+                                        "transaction": {
+                                            "type": "object"
+                                        },
+                                        "balance": {
+                                            "type": "number",
+                                            "format": "float"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Saldo insuficiente ou bloqueado"
+                    },
+                    "422": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -234,6 +315,10 @@
         {
             "name": "Autenticação",
             "description": "Endpoints de registro e login"
+        },
+        {
+            "name": "Transações",
+            "description": "Operações de saldo e transferências"
         },
         {
             "name": "Cadastro",

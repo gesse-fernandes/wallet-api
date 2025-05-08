@@ -90,6 +90,7 @@ class AuthControllerApi extends Controller
      *     path="/api/auth/login",
      *     tags={"Autenticação"},
      *     summary="Realiza o login de um usuário",
+     *  security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
