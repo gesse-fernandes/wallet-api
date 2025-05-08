@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Address;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\AddressRepositoryInterface;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthServiceTest extends TestCase
 {
@@ -141,5 +143,117 @@ class AuthServiceTest extends TestCase
         $result = $service->register($data);
 
         $this->assertEquals(10, $result->id);
+    }
+    public function test_login_generates_valid_jwt_token_for_valid_credentials()
+    {
+        $password = 'Senha123!';
+        $user = User::factory()->create([
+            'password' => Hash::make($password),
+        ]);
+
+        // Repositórios reais, sem mocks
+        $userRepo = new class implements \App\Repositories\Contracts\UserRepositoryInterface {
+            public function create(array $data) {}
+            public function findByEmail(string $email)
+            {
+                return User::where('email', $email)->first();
+            }
+        };
+
+        // Address não é usado no login
+        $addressRepo = $this->createMock(\App\Repositories\Contracts\AddressRepositoryInterface::class);
+
+        $service = new AuthService($userRepo, $addressRepo);
+
+        $result = $service->login([
+            'email' => $user->email,
+            'password' => $password,
+        ]);
+
+        $this->assertArrayHasKey('user', $result);
+        $this->assertArrayHasKey('token', $result);
+        $this->assertEquals($user->id, $result['user']->id);
+        $this->assertStringStartsWith('Bearer ', $result['token']);
+    }
+
+    public function test_login_throws_exception_on_invalid_credentials()
+    {
+        $password = 'Senha123!';
+        $user = User::factory()->create([
+            'email' => 'fail@email.com',
+            'password' => Hash::make($password),
+        ]);
+
+        $userRepo = new class implements \App\Repositories\Contracts\UserRepositoryInterface {
+            public function create(array $data) {}
+            public function findByEmail(string $email)
+            {
+                return User::where('email', $email)->first();
+            }
+        };
+
+        $addressRepo = $this->createMock(\App\Repositories\Contracts\AddressRepositoryInterface::class);
+        $service = new AuthService($userRepo, $addressRepo);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Credenciais inválidas.');
+
+        $service->login([
+            'email' => $user->email,
+            'password' => 'senhaErrada',
+        ]);
+    }
+    public function test_logout_invalidates_valid_token()
+    {
+        // Cria usuário real
+        $user = User::factory()->create();
+
+        // Gera token real
+        $token = JWTAuth::fromUser($user);
+
+        // Seta o token como o atual
+        JWTAuth::setToken($token);
+
+        // Mocka os repositórios (não usados no logout)
+        $userRepo = $this->createMock(\App\Repositories\Contracts\UserRepositoryInterface::class);
+        $addressRepo = $this->createMock(\App\Repositories\Contracts\AddressRepositoryInterface::class);
+
+        $service = new \App\Services\AuthService($userRepo, $addressRepo);
+
+        // Executa logout
+        $service->logout();
+
+        // Tenta usar o token depois do logout para validar que foi invalidado
+        $this->expectException(\Tymon\JWTAuth\Exceptions\TokenInvalidException::class);
+        JWTAuth::setToken($token)->authenticate();
+    }
+
+    public function test_logout_with_invalid_token_throws_exception()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Token inválido ou expirado.');
+
+        $fakeToken = 'xxxxx.yyyy.zzzz';
+        JWTAuth::setToken($fakeToken);
+
+        $userRepo = $this->createMock(UserRepositoryInterface::class);
+        $addressRepo = $this->createMock(AddressRepositoryInterface::class);
+
+        $service = new AuthService($userRepo, $addressRepo);
+        $service->logout();
+    }
+
+
+    public function test_logout_without_token_throws_exception()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Token ausente ou malformado.');
+
+        // Nenhum token setado
+        $userRepo = $this->createMock(UserRepositoryInterface::class);
+        $addressRepo = $this->createMock(AddressRepositoryInterface::class);
+
+        $service = new AuthService($userRepo, $addressRepo);
+        $service->logout();
     }
 }

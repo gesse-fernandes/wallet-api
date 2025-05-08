@@ -9,7 +9,8 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class AuthService
 {
@@ -69,8 +70,12 @@ class AuthService
     {
         try {
             JWTAuth::invalidate(JWTAuth::getToken());
+        } catch (TokenInvalidException | TokenExpiredException $e) {
+            throw new \Exception('Token inválido ou expirado.', 401);
         } catch (JWTException $e) {
-            throw new \Exception('Falha ao fazer logout.');
+            throw new \Exception('Token ausente ou malformado.', 401);
+        } catch (\Throwable $e) {
+            throw new \Exception('Erro interno ao fazer logout.', 500);
         }
     }
 }

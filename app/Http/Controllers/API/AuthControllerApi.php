@@ -124,9 +124,11 @@ class AuthControllerApi extends Controller
                 'token' => $response['token'],
             ], 200);
         } catch (\Throwable $e) {
+            $code = $e->getMessage() === 'Credenciais inválidas.' ? 401 : 500;
+
             return response()->json([
                 'message' => $e->getMessage(),
-            ], 401);
+            ], $code);
         }
     }
 
@@ -160,7 +162,7 @@ class AuthControllerApi extends Controller
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage(),
-            ], 500);
+            ], $e->getCode() ?: 500);
         }
     }
 }

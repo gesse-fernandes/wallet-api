@@ -28,7 +28,8 @@ return [
             'oauth2_callback' => 'api/oauth2-callback',
             'middleware' => [
                 'api' => [
-                    'api'
+                    'api',
+                    'web'
                 ],
                 'asset' => [],
                 'docs' => [],
