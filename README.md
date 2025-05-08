@@ -108,7 +108,7 @@ POST /api/auth/register
 
 ```
 
-Resposta esperada:
+Retorno esperado:
 
 ```bash
 
