@@ -22,9 +22,10 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         return Transaction::where('payer_id', $userId)
             ->orWhere('payee_id', $userId)
-            ->orderBy('created_at', 'desc')
+            ->orderByDesc('created_at')
             ->get();
     }
+
     public function findByIdUser($id)
     {
         return User::find($id);

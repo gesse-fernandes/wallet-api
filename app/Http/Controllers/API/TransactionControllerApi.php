@@ -173,4 +173,57 @@ class TransactionControllerApi extends Controller
             ], $e->getCode() > 0 ? $e->getCode() : 500);
         }
     }
+    /**
+     * @OA\Get(
+     *     path="/api/transactions/statement",
+     *     summary="Consulta o extrato do usuário autenticado",
+     *     tags={"Transações"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Extrato consultado com sucesso.",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Extrato consultado com sucesso."),
+     *             @OA\Property(
+     *                 property="transactions",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="type", type="string", example="deposit"),
+     *                     @OA\Property(property="status", type="string", example="completed"),
+     *                     @OA\Property(property="amount", type="number", format="float", example=150.00),
+     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-05-08T16:02:53.000000Z")
+     *                 )
+     *             ),
+     *             @OA\Property(property="balance", type="number", format="float", example=1200.50)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Você não tem transações registradas."
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno no servidor."
+     *     )
+     * )
+     */
+
+    public function statement()
+    {
+        try {
+            $result = $this->transactionService->getUserStatement();
+
+            return response()->json([
+                'message' => 'Extrato consultado com sucesso.',
+                'transactions' => $result['transactions'],
+                'balance' => $result['balance'],
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], $e->getCode() ?: 500);
+        }
+    }
 }

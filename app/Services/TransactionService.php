@@ -38,14 +38,18 @@ class TransactionService
 
             $this->transactionRepo->decrementBalance($payer, $data['amount']);
             $this->transactionRepo->incrementBalance($payee, $data['amount']);
+            $metadata = [
+                'ip' => request()->ip(),
+                'user_agent' => request()->userAgent(),
 
+            ];
             return $this->transactionRepo->create([
                 'payer_id' => $payer->id,
                 'payee_id' => $payee->id,
                 'type' => 'transfer',
                 'status' => 'completed',
                 'amount' => $data['amount'],
-                'metadata' => $data['metadata'] ?? [],
+                'metadata' => $metadata ?? [],
             ]);
         });
     }
@@ -55,7 +59,11 @@ class TransactionService
         return DB::transaction(function () use ($data) {
             $payee = Auth::user();
 
+            $metadata = [
+                'ip' => request()->ip(),
+                'user_agent' => request()->userAgent(),
 
+            ];
             $this->transactionRepo->incrementBalance($payee, $data['amount']);
 
             return $this->transactionRepo->create([
@@ -64,7 +72,7 @@ class TransactionService
                 'type' => 'deposit',
                 'status' => 'completed',
                 'amount' => $data['amount'],
-                'metadata' => $data['metadata'] ?? [],
+                'metadata' => $metadata ?? [],
             ]);
         });
     }
@@ -93,10 +101,15 @@ class TransactionService
                 throw new \Exception('Tipo de transação inválido para reversão.', 422);
             }
 
+            $metadata = [
+                'ip' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'reason' => $reason ?? 'Reversão solicitada'
 
+            ];
             $original->status = 'reversed';
             $original->reversed_transaction_id = $original->id;
-            $original->metadata = ['reason' => $reason ?? 'Reversão solicitada'];
+            $original->metadata = $metadata;
             $original->save();
 
             return [
@@ -105,5 +118,20 @@ class TransactionService
 
             ];
         });
+    }
+
+    public function getUserStatement()
+    {
+        $user = Auth::user();
+        $transactions = $this->transactionRepo->findUserTransactions($user->id);
+
+        if ($transactions->isEmpty()) {
+            throw new \Exception('Você não tem transações registradas.', 404);
+        }
+
+        return [
+            'transactions' => $transactions,
+            'balance' => $user->balance,
+        ];
     }
 }

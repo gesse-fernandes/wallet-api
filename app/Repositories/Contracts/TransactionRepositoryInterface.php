@@ -10,8 +10,9 @@ interface TransactionRepositoryInterface
     public function create($data);
 
     public function findById($id);
-
     public function findUserTransactions($userId);
+
+
     public function findByIdUser($id);
 
     public function incrementBalance(User $user, float $amount);

@@ -153,8 +153,8 @@ class AuthServiceTest extends TestCase
 
         // Repositórios reais, sem mocks
         $userRepo = new class implements \App\Repositories\Contracts\UserRepositoryInterface {
-            public function create(array $data) {}
-            public function findByEmail(string $email)
+            public function create($data) {}
+            public function findByEmail($email)
             {
                 return User::where('email', $email)->first();
             }
@@ -185,8 +185,8 @@ class AuthServiceTest extends TestCase
         ]);
 
         $userRepo = new class implements \App\Repositories\Contracts\UserRepositoryInterface {
-            public function create(array $data) {}
-            public function findByEmail(string $email)
+            public function create($data) {}
+            public function findByEmail($email)
             {
                 return User::where('email', $email)->first();
             }
