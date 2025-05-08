@@ -42,7 +42,7 @@ class AuthService
                 'password' => Hash::make($data['password']),
                 'address_id' => $address->id,
             ]);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             Log::error("Erro ao registrar usuário: " . $e->getMessage());
 
 
@@ -74,7 +74,7 @@ class AuthService
             throw new \Exception('Token inválido ou expirado.', 401);
         } catch (JWTException $e) {
             throw new \Exception('Token ausente ou malformado.', 401);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             throw new \Exception('Erro interno ao fazer logout.', 500);
         }
     }

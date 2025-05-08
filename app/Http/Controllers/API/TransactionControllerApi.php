@@ -62,7 +62,7 @@ class TransactionControllerApi extends Controller
                 'balance' => Auth::user()->balance,
 
             ], 200);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], $e->getCode() > 0 ? $e->getCode() : 500);
@@ -119,7 +119,7 @@ class TransactionControllerApi extends Controller
                 'transaction' => $transaction,
                 'balance' => Auth::user()->balance,
             ]);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao realizar o depósito: ' . $e->getMessage(),
             ], $e->getCode() > 0 ? $e->getCode() : 500);
@@ -167,7 +167,7 @@ class TransactionControllerApi extends Controller
                 'message' => 'Transação revertida com sucesso.',
                 'transaction' => $transaction,
             ]);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], $e->getCode() > 0 ? $e->getCode() : 500);
@@ -220,7 +220,7 @@ class TransactionControllerApi extends Controller
                 'transactions' => $result['transactions'],
                 'balance' => $result['balance'],
             ], 200);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], $e->getCode() ?: 500);

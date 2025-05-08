@@ -15,12 +15,11 @@ use App\Services\AuthService;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Mockery;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AuthControllerTest extends TestCase
 {
-    /**
-     * A basic unit test example.
-     */
+    use RefreshDatabase;
     public function test_register_returns_token_and_user_data_on_success()
     {
         $address = Address::factory()->make();

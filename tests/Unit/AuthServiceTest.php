@@ -10,10 +10,11 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\AddressRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AuthServiceTest extends TestCase
 {
-
+    use RefreshDatabase;
     public function test_register_user_successfully_()
     {
         // Usa factory mas NÃO persiste no banco

@@ -78,7 +78,7 @@ class AuthControllerApi extends Controller
                 "name" => $user->name,
                 "token" => 'Bearer ' . $token,
             ], 200);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 "message" => $e->getMessage()
             ], 500);
@@ -124,7 +124,7 @@ class AuthControllerApi extends Controller
                 'name' => $response['user']->name,
                 'token' => $response['token'],
             ], 200);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             $code = $e->getMessage() === 'Credenciais inválidas.' ? 401 : 500;
 
             return response()->json([
@@ -160,7 +160,7 @@ class AuthControllerApi extends Controller
             return response()->json([
                 'message' => 'Logout realizado com sucesso.',
             ], 200);
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], $e->getCode() ?: 500);

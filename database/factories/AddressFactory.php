@@ -14,7 +14,7 @@ class AddressFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
+    public function definition()
     {
         $faker = \Faker\Factory::create('pt_BR');
 
