@@ -39,7 +39,7 @@ class LogoutFeatureTest extends TestCase
 
     public function test_logout_fails_with_invalid_token()
     {
-        $invalidToken = 'Bearer token.invalido.aqui';
+        $invalidToken = 'Bearer token.invalido';
 
         $response = $this->withHeader('Authorization', $invalidToken)
             ->postJson('/api/auth/logout');

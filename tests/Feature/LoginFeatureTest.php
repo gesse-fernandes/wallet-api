@@ -15,7 +15,7 @@ class LoginFeatureTest extends TestCase
     {
         $password = 'Senha123!';
         $user = User::factory()->create([
-            'email' => 'teste@email.com',
+            'email' => 'joao@email.com',
             'password' => Hash::make($password),
         ]);
 
@@ -31,7 +31,7 @@ class LoginFeatureTest extends TestCase
     public function test_login_fails_with_wrong_password()
     {
         $user = User::factory()->create([
-            'email' => 'teste@erro.com',
+            'email' => 'joao@email.com',
             'password' => Hash::make('SenhaCorreta123!'),
         ]);
 

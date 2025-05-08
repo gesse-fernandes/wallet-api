@@ -20,10 +20,10 @@ class TransactionServiceTest extends TestCase
     {
         parent::setUp();
 
-        // Simula DB::transaction sem tocar no banco real
+
         DB::shouldReceive('transaction')->andReturnUsing(fn($callback) => $callback());
 
-        // Injeta uma request real para evitar conflitos com AuthServiceProvider
+
         $this->app->instance('request', new \Illuminate\Http\Request());
         request()->headers->set('User-Agent', 'UnitTestAgent');
         request()->server->set('REMOTE_ADDR', '127.0.0.1');

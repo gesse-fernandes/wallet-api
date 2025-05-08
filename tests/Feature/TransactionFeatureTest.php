@@ -165,7 +165,7 @@ class TransactionFeatureTest extends TestCase
         $mock->shouldReceive('deposit')
             ->andThrow(new \Exception('Falha no serviço'));
 
-        // Substitui a binding da service no container
+
         $this->app->instance(\App\Services\TransactionService::class, $mock);
 
         $token = \Tymon\JWTAuth\Facades\JWTAuth::fromUser($user);
@@ -183,7 +183,7 @@ class TransactionFeatureTest extends TestCase
         $payer = User::factory()->create(['balance' => 500]);
         $payee = User::factory()->create(['balance' => 300]);
 
-        // Transação original
+
         $transaction = Transaction::factory()->create([
             'payer_id' => $payer->id,
             'payee_id' => $payee->id,

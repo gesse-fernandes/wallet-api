@@ -17,7 +17,7 @@ class RegisterFeatureTest extends TestCase
 
     public function test_user_can_register_successfully()
     {
-        $user = User::factory()->make(); // Gera email e cpf_cnpj válidos
+        $user = User::factory()->make();
         $address = Address::factory()->make();
 
         $payload = array_merge($user->only(['name', 'email', 'cpf_cnpj']), [
@@ -64,7 +64,7 @@ class RegisterFeatureTest extends TestCase
         $address = Address::factory()->make();
 
         $newUser = User::factory()->make([
-            'email' => $existingUser->email, // força duplicado
+            'email' => $existingUser->email,
         ]);
 
         $payload = array_merge($newUser->only(['name', 'email', 'cpf_cnpj']), [

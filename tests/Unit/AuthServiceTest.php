@@ -17,11 +17,11 @@ class AuthServiceTest extends TestCase
     use RefreshDatabase;
     public function test_register_user_successfully_()
     {
-        // Usa factory mas NÃO persiste no banco
-        $address = Address::factory()->make(); // make = não salva
-        $user = User::factory()->make(['address_id' => null]); // sem persistência
 
-        // Monta array com base nos models fakeados
+        $address = Address::factory()->make();
+        $user = User::factory()->make(['address_id' => null]);
+
+
         $data = [
             'name' => $user->name,
             'email' => $user->email,
@@ -35,15 +35,15 @@ class AuthServiceTest extends TestCase
             'zipcode' => $address->zipcode,
         ];
 
-        // Mocks dos repositórios
+
         $userRepo = $this->createMock(UserRepositoryInterface::class);
         $addressRepo = $this->createMock(AddressRepositoryInterface::class);
 
-        // Simula o retorno do Address criado
+
         $mockAddress = new Address(['id' => 1]);
         $addressRepo->method('create')->willReturn($mockAddress);
 
-        // Simula o retorno do User criado
+
         $mockUser = new User([
             'id' => 1,
             'name' => $data['name'],
@@ -53,11 +53,11 @@ class AuthServiceTest extends TestCase
         ]);
         $userRepo->method('create')->willReturn($mockUser);
 
-        // Executa o serviço
+
         $service = new AuthService($userRepo, $addressRepo);
         $result = $service->register($data);
 
-        // Valida
+
         $this->assertInstanceOf(User::class, $result);
         $this->assertEquals($data['name'], $result->name);
         $this->assertEquals($mockAddress->id, $result->address_id);
@@ -152,7 +152,7 @@ class AuthServiceTest extends TestCase
             'password' => Hash::make($password),
         ]);
 
-        // Repositórios reais, sem mocks
+
         $userRepo = new class implements \App\Repositories\Contracts\UserRepositoryInterface {
             public function create($data) {}
             public function findByEmail($email)
@@ -161,7 +161,7 @@ class AuthServiceTest extends TestCase
             }
         };
 
-        // Address não é usado no login
+
         $addressRepo = $this->createMock(\App\Repositories\Contracts\AddressRepositoryInterface::class);
 
         $service = new AuthService($userRepo, $addressRepo);
@@ -206,25 +206,25 @@ class AuthServiceTest extends TestCase
     }
     public function test_logout_invalidates_valid_token()
     {
-        // Cria usuário real
+
         $user = User::factory()->create();
 
-        // Gera token real
+
         $token = JWTAuth::fromUser($user);
 
-        // Seta o token como o atual
+
         JWTAuth::setToken($token);
 
-        // Mocka os repositórios (não usados no logout)
+
         $userRepo = $this->createMock(\App\Repositories\Contracts\UserRepositoryInterface::class);
         $addressRepo = $this->createMock(\App\Repositories\Contracts\AddressRepositoryInterface::class);
 
         $service = new \App\Services\AuthService($userRepo, $addressRepo);
 
-        // Executa logout
+
         $service->logout();
 
-        // Tenta usar o token depois do logout para validar que foi invalidado
+
         $this->expectException(\Tymon\JWTAuth\Exceptions\TokenInvalidException::class);
         JWTAuth::setToken($token)->authenticate();
     }
@@ -250,7 +250,7 @@ class AuthServiceTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Token ausente ou malformado.');
 
-        // Nenhum token setado
+
         $userRepo = $this->createMock(UserRepositoryInterface::class);
         $addressRepo = $this->createMock(AddressRepositoryInterface::class);
 

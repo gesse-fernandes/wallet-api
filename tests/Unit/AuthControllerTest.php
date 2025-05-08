@@ -67,8 +67,8 @@ class AuthControllerTest extends TestCase
     public function test_register_returns_500_when_auth_service_fails()
     {
         $data = [
-            'name' => 'Erro Teste',
-            'email' => 'erro@email.com',
+            'name' => 'João da Silva',
+            'email' => 'joao@email.com"',
             'cpf_cnpj' => '12345678900',
             'password' => 'Senha123!',
             'street' => 'Rua A',
@@ -79,18 +79,18 @@ class AuthControllerTest extends TestCase
             'zipcode' => '12345-000',
         ];
 
-        // Mock do RegisterRequest com Mockery
+
         $request = \Mockery::mock(\App\Http\Requests\RegisterRequest::class);
         $request->shouldReceive('validated')->andReturn($data);
 
-        // Mock do AuthService lançando exceção
+
         $authService = \Mockery::mock(\App\Services\AuthService::class);
         $authService->shouldReceive('register')
             ->once()
             ->with($data)
             ->andThrow(new \Exception('Erro interno'));
 
-        // Executa o controller
+
         $controller = new  AuthControllerApi($authService);
         $response = $controller->register($request);
 
@@ -137,8 +137,8 @@ class AuthControllerTest extends TestCase
     public function test_login_returns_401_when_service_throws_exception()
     {
         $data = [
-            'email' => 'erro@email.com',
-            'password' => 'senhaerrada',
+            'email' => 'joao@email.com',
+            'password' => 'Senha123!',
         ];
 
         $request = Mockery::mock(LoginRequest::class);
